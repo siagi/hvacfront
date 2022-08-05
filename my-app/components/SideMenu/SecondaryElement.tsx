@@ -8,13 +8,13 @@ import styles from '../styles/Home.module.css'
 const SecondaryElement:FunctionComponent<{name:string,desc:string,link:string}> = ({name,desc,link}) => {
   return (
    <Link href={link}>
-    <button className='bg-white rounded-3xl p-2 hover:rounded-xl hover:translate-x-5 transition-all ease-out duration-200 delay-100 cursor-pointer focus:rounded-xl focus:translate-x-5 '>
-            <div className='flex gap-x-4'>
+    <button className='bg-zinc-200 p-1 hover:bg-zinc-300 active:bg-zinc-100 transition-all ease-out cursor-pointer text-xs'>
+            <div>
                 <div>
                     icon
                 </div>
                 <div>
-                    <div style={{color:'#00508D'}} className='font-semibold text-lg'>
+                    <div>
                         {name}
                     </div>
                 </div>

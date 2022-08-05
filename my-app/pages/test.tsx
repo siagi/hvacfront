@@ -10,6 +10,8 @@ const TestComponent = observer(() => {
   const bbb= useStore();
   const store =useRootStore()
 
+  
+
 
 
 

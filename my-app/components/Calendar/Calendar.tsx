@@ -95,7 +95,7 @@ const Calendar:FunctionComponent = () => {
 
     let currentDay = 1;
 
-    const days = new Array(6).fill([]).map((index,item)=>
+    const days = new Array(5).fill([]).map((index,item)=>
         {
             return (
                 new Array(7).fill('Day').map((index2,day)=>{
@@ -104,15 +104,15 @@ const Calendar:FunctionComponent = () => {
                 if(currentDay > amountDays) return '';
                 currentDay++
                 return (
-                            <div className={sampleDate.toLocaleDateString() === readableTodayDate ? `bg-green-200 h-full  hover:border-gray-400 hover:border-b-4 font-semibold m-px cursor-pointer p-3`: `flex flex-col bg-gray-100 hover:bg-gray-200 hover:border-gray-400 hover:border-b-4 text-gray-900 font-semibold text-sm m-px cursor-pointer h-full border-b-2 border-b-white`}>
-                            <span className={`flex justify-center ${(currentDay-1)%2==0 ?'bg-gray-100 ' :'bg-gray-200'}`}>{currentDay-1 <=7 && daysArray[sampleDate.getDay()]}</span>
+                            <div key={index2} className={sampleDate.toLocaleDateString() === readableTodayDate ? `h-full bg-zinc-100 hover:border-gray-400 hover:border-b-4 text-sm font-semibold pb-5 m-px cursor-pointer`: `flex flex-col  bg-white hover:bg-zinc-50 hover:border-gray-400 hover:border-b-4 text-gray-900 font-semibold text-sm m-px cursor-pointer h-full border-b border-b-zinc-200`}>
+                            <span className={`flex justify-start absolute -translate-y-6 ${(currentDay-1)%2==0 ?'bg-50' :'bg-50'}`}>{currentDay-1 <=7 && daysArray[sampleDate.getDay()]}</span>
                                 <div className="p-1">
-                                    <div className="flex justify-center">{currentDay-1}</div>
+                                    <div className="flex justify-start pt-0 pl-0">{currentDay-1}</div>
                                     <div onClick={()=>setShowOrderDetails(!showOrderDetails)}>{testArray.service1.information.date.toLocaleDateString() ===sampleDate.toLocaleDateString() ? 
-                                    <div className={`text-white flex flex-col rounded-md mt-1 p-1 ${testArray.service1.information.status === 'zaplanowane' ?'bg-blue-500 hover:bg-blue-800' :''}`}>
-                                        <div className="font-bold text-base">Zam. nr:#{testArray.service1.information.number}</div>
-                                        <div>Status:{testArray.service1.information.status}</div>
-                                        <div>Firma:{testArray.service1.information.service_address.name}</div>
+                                    <div className={`text-white flex flex-col select-none text-xs mt-1 p-1 ${testArray.service1.information.status === 'zaplanowane' ?'bg-teal-400 hover:bg-teal-500' :''}`}>
+                                        <div className="font-bold">Zam. nr:#{testArray.service1.information.number}</div>
+                                        {/* <div>Status:{testArray.service1.information.status}</div>
+                                        <div>Firma:{testArray.service1.information.service_address.name}</div> */}
                                     </div>
 
                                     :'' }
@@ -128,63 +128,83 @@ const Calendar:FunctionComponent = () => {
     // console.log(days.map((item)=>console.log(item.find((day)=>day === todayDate))))
    
     return(
-        <>
-        <div className="flex gap-2 justify-center p-5">
-        <button onClick={()=>{
-            setCurrentMonth(currentMonth-1);
-            setIndex(index-1 < 0 ? 11:index-1);
-        }}>
-            Poprzedni miesiąc</button>
-        <div className='text-2xl font-semibold'>{monthsArray[index]} {new Date(currentYear,currentMonth-1,currentDay).getFullYear()}</div>
-        <button onClick={()=>{
-            setCurrentMonth(currentMonth+1)
-            setIndex(index+1>11 ? 0:index+1)
-            if(index > 11)setIndex(11);
-            }}>
-                Kolejny miesiąc
-                </button>
+        <div className="grid h-screen grid-cols-12">
+            <div className="col-start-1 col-span-9">
+                <div className="flex gap-2 pb-8 justify-left bg-zinc-100 h-16">
+                    <button className="pt-1" onClick={()=>{
+                            setCurrentMonth(currentMonth-1);
+                            setIndex(index-1 < 0 ? 11:index-1);
+                        }}>
+                    <div>
+                                <svg className="h-6 w-6 text-black"  width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="12" cy="12" r="9" />  <line x1="8" y1="12" x2="12" y2="16" />  <line x1="12" y1="8" x2="12" y2="16" />  <line x1="16" y1="12" x2="12" y2="16" /></svg>
+                        </div>
+                    </button>
+                    <button className="pt-1" onClick={()=>{
+                            setCurrentMonth(currentMonth+1)
+                            setIndex(index+1>11 ? 0:index+1)
+                            if(index > 11)setIndex(11);
+                        }}>
+                        <div>
+                            <svg className="h-6 w-6 text-black"  width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="12" cy="12" r="9" />  <line x1="12" y1="8" x2="8" y2="12" />  <line x1="12" y1="8" x2="12" y2="16" />  <line x1="16" y1="12" x2="12" y2="8" /></svg>
+                        </div>
+                    </button>
 
-        </div>
-        <div className="grid grid-cols-7 grid-rows-5 h-[800px]">
-            {days}
-        </div>
-        {showOrderDetails && 
-            <div className="flex flex-col my-3 bg-gray-100 p-3">
-                <div className="font-bold"> Zamówieni nr: {testArray.service1.information.number}</div>
-                <div className="flex justify-between ">
-                    <div><p className="font-bold">Miejsce wykonania serwisu:</p>
-                        <div className="flex flex-col">
-                            <div>{testArray.service1.information.service_address.name}</div>
-                            <div>{testArray.service1.information.service_address.street}</div>
-                            <div>{testArray.service1.information.service_address.postcode} {testArray.service1.information.service_address.city}</div>
-                            <div>{testArray.service1.information.service_address.phone}</div>
-                            <div>{testArray.service1.information.service_address.email}</div>
-                        </div>
-                    </div> 
-                    <div><p className="font-bold">Osoba wykonująca serwis:</p>
-                        <div className="flex gap-2">      
-                            <div><Image className="rounded-full" src={testArray.service1.information.user.photo} height='50px' width='50px'/></div>
-                            <div className='pt-3'>{testArray.service1.information.user.name}</div>
-                        </div>
-                        <div>Email:{testArray.service1.information.user.mail}</div>
-                        <div>Phone:{testArray.service1.information.user.phone}</div>
+                        <div className='font-semibold text-base pt-1'>{monthsArray[index]} {new Date(currentYear,currentMonth-1,currentDay).getFullYear()}</div>
                     </div>
-                    <div><p className="font-bold">Kosztorys</p>
-                        <div>{testArray.service1.information.parts[0].name.toUpperCase()} --- {testArray.service1.information.parts[0].price}zł </div>
-                        <div>{testArray.service1.information.parts[1].name.toUpperCase()} --- {testArray.service1.information.parts[1].price}zł </div>
-                        <div>Suma:{testArray.service1.information.price}</div>
-                    </div>
-                    <div><p className="font-bold">Status:</p>
-                    <div className="flex flex-col gap-y-2">
-                        <button className="bg-blue-500 px-4 py-2 rounded-xl uppercase font-semibold text-white">{testArray.service1.information.status}</button>
-                        <button className="bg-gray-300 px-4 py-2  rounded-xl uppercase font-semibold text-white">Raport</button>
-                        <button className="bg-gray-300 px-4 py-2  rounded-xl uppercase font-semibold text-white">Faktura</button>
-                    </div>
-                    </div>
+                <div className="grid grid-cols-7 grid-rows-5 h-[800px]">
+                    {days}
                 </div>
             </div>
-        }
-        </>
+            <div className="col-start-10 col-span-3 border-l border-zinc-200">
+                <div className="bg-zinc-100 h-16 pl-2 border-b">
+                    <span className="text-lg pt-2">
+                        Here will be selected date
+                    </span>
+                </div>
+                <div>
+                {showOrderDetails && 
+                    <div className="flex flex-col bg-gray-100 px-2 text-sm pt-1">
+                        <div className="font-bold text-base pb-3"> Zamówieni nr: {testArray.service1.information.number}</div>
+                        <div className="flex flex-col gap-2">
+                            <div><p className="border-b border-zinc-200 font-bold pb-2">Miejsce wykonania serwisu:</p>
+                                <div className="flex flex-col py-2">
+                                    <div>{testArray.service1.information.service_address.name}</div>
+                                    <div>{testArray.service1.information.service_address.street}</div>
+                                    <div>{testArray.service1.information.service_address.postcode} {testArray.service1.information.service_address.city}</div>
+                                    <div>{testArray.service1.information.service_address.phone}</div>
+                                    <div>{testArray.service1.information.service_address.email}</div>
+                                </div>
+                            </div> 
+                            <div><p className="border-b border-zinc-200 font-bold pb-2">Osoba wykonująca serwis:</p>
+                                <div className="flex gap-2 py-2">      
+                                    <div><Image className="rounded-full" src={testArray.service1.information.user.photo} height='50px' width='50px'/></div>
+                                    <div className='pt-3'>{testArray.service1.information.user.name}</div>
+                                </div>
+                                <div>Email:{testArray.service1.information.user.mail}</div>
+                                <div>Phone:{testArray.service1.information.user.phone}</div>
+                            </div>
+                            <div><p className="border-b border-zinc-200 font-bold pb-2">Kosztorys</p>
+                            <div className="py-2">
+                                <div>{testArray.service1.information.parts[0].name.toUpperCase()} --- {testArray.service1.information.parts[0].price}zł </div>
+                                <div>{testArray.service1.information.parts[1].name.toUpperCase()} --- {testArray.service1.information.parts[1].price}zł </div>
+                                <div>Suma: {testArray.service1.information.price}</div>
+                            </div>
+                            </div>
+                            <div><p className="border-b border-zinc-200 font-bold pb-2">Status:</p>
+                            <div className="flex flex-col gap-y-3 pt-4">
+                                <button className="bg-teal-400 px-4 py-2 uppercase font-semibold text-white">{testArray.service1.information.status}</button>
+                                <button className="bg-zinc-300 px-4 py-2   uppercase font-semibold text-white">Raport</button>
+                                <button className="bg-zinc-300 px-4 py-2   uppercase font-semibold text-white">Faktura</button>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                </div>
+
+            </div>
+        </div>
     )
 }
 

@@ -7,8 +7,7 @@ import { FunctionComponent } from 'react'
 const Avatar:FunctionComponent = () => {
   return (
       <div className='flex'>
-          <div>Name</div>
-          <div className='bg-gray-600 w-10 h-10 rounded-full'></div>
+          <div className='w-10 bg-zinc-500 h-10 rounded-full flex justify-center items-center text-sm'>MM</div>
             
       </div>
   )
