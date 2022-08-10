@@ -99,7 +99,7 @@ const FormDetails = () => {
   return (
       <>
         <form onSubmit={registerDetails} onChange={handleForm}>
-            <div className="flex flex-col w-1/2">
+            <div className="flex flex-col lg:w-1/2 md:w-full">
                     <div className="col-start-1 row-start-1">
                             <div className="px-3 pt-2 mb-6 md:mb-0">
                                 <label className="font-semibold text-sm" htmlFor="grid-first-name">
