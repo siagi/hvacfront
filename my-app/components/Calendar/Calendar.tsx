@@ -104,10 +104,6 @@ const Calendar:FunctionComponent = () => {
                 currentDay++
                 return (
                             <div  
-                            onClick={(e)=>{
-                                console.log(e.target.children[1].outerText)
-                                // setSelectedDate(new Date())
-                            }}
                             onDoubleClick={() => {
                                 // setShowCustomModal(true)
                                 // console.log('asdads')
@@ -232,7 +228,7 @@ const Calendar:FunctionComponent = () => {
                             </div> 
                             <div><p className="border-b border-zinc-200 font-bold pb-2">Osoba wykonująca serwis:</p>
                                 <div className="flex gap-2 py-2">      
-                                    <div><Image className="rounded-full" src={testArray.service1.information.user.photo} height='50px' width='50px'/></div>
+                                    <div><Image className="rounded-full" src={testArray.service1.information.user.photo} height='50px' width='50px' alt="image"/></div>
                                     <div className='pt-3'>{testArray.service1.information.user.name}</div>
                                 </div>
                                 <div>Email:{testArray.service1.information.user.mail}</div>
