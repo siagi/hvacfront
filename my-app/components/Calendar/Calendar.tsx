@@ -1,16 +1,15 @@
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import { FunctionComponent, useEffect, useState } from "react";
+import { FunctionComponent, useEffect, useRef, useState } from "react";
 
 const Calendar:FunctionComponent = () => {
-    useEffect(()=>{
-        const getAmountOfDaysInMonth = (year:number,month:number,day = 0) =>{
-            setAmountDays(new Date(year,month,day).getDate());
-            return new Date(year,month,day).getDate();
-        }
+    const [showCustomModal, setShowCustomModal] = useState<boolean>(false);
+    const [selectedDate, setSelectedDate] = useState<string>(new Date(Date.now()).toDateString())
+    const modal = useRef<HTMLDivElement>(null);
+    const refCalendar = useRef(null)
+    const [modalPosition, setModalPosition] = useState({x:null, y:null})
+    let promiseSample:Promise<{x:number, y:number}>;
     
-        getAmountOfDaysInMonth(currentYear,currentMonth+1);
-    })
     const todayDate =  new Date();
     const testArray ={
         service1:{
@@ -87,6 +86,7 @@ const Calendar:FunctionComponent = () => {
     const [index,setIndex] = useState<number>(currentMonth);
     const [showOrderDetails,setShowOrderDetails] = useState<boolean>(false);
     const readableTodayDate = todayDate.toLocaleDateString()
+   
     
     // const currentYear = todayDate.getFullYear();
     // const currentMonth = todayDate.getMonth();
@@ -98,13 +98,48 @@ const Calendar:FunctionComponent = () => {
     const days = new Array(5).fill([]).map((index,item)=>
         {
             return (
-                new Array(7).fill('Day').map((index2,day)=>{
+                new Array(7).fill('Day').map((day,index2)=>{
                 const sampleDate = new Date(currentYear,currentMonth,currentDay)
-                console.log(sampleDate,currentYear,currentMonth,currentDay);
                 if(currentDay > amountDays) return '';
                 currentDay++
                 return (
-                            <div key={index2} className={sampleDate.toLocaleDateString() === readableTodayDate ? `h-full bg-zinc-100 hover:border-gray-400 hover:border-b-4 text-sm font-semibold pb-5 m-px cursor-pointer`: `flex flex-col  bg-white hover:bg-zinc-50 hover:border-gray-400 hover:border-b-4 text-gray-900 font-semibold text-sm m-px cursor-pointer h-full border-b border-b-zinc-200`}>
+                            <div  
+                            onClick={(e)=>{
+                                console.log(e.target.children[1].outerText)
+                                // setSelectedDate(new Date())
+                            }}
+                            onDoubleClick={() => {
+                                // setShowCustomModal(true)
+                                // console.log('asdads')
+                                console.log('1')
+                                return new Promise<void>((resolve, reject) => {
+                                    console.log('Promise');
+                                    console.log('2')
+                                        
+                                        // modal.current.style.left = `${modalPosition.x}px`
+                                        // modal.current.style.top = `${modalPosition.y}px`
+                                    console.log(modalPosition.x)
+                                    console.log(modalPosition.y)
+                                    if(modal && modal.current){
+                                        modal.current.style.left = `${modalPosition.x}px`,
+                                        modal.current.style.top = `${modalPosition.y}px`
+                                    }
+                                    resolve()
+                                    
+
+                                }).then(()=> {
+                                    console.log('3')
+                                })
+                                // promiseSample.then((a)=>console.log(a));
+                                // setTimeout(()=>{
+                                //     if(modal && modal.current){
+                                //         modal.current.style.left = `${modalPosition.x}px`
+                                //         modal.current.style.top = `${modalPosition.y}px`
+                                //         console.log(modalPosition.x)
+                                //         console.log('Modal',modal);
+                                //     }
+                                // },0)
+                            }} key={index2} className={sampleDate.toLocaleDateString() === readableTodayDate ? `h-full bg-zinc-100 hover:border-gray-400 hover:border-b-4 text-sm font-semibold pb-5 m-px cursor-pointer`: `flex flex-col after:container  bg-white hover:bg-zinc-50 hover:border-gray-400 hover:border-b-4 text-gray-900 font-semibold text-sm m-px cursor-pointer h-full border-b border-b-zinc-200`}>
                             <span className={`flex justify-start absolute -translate-y-6 ${(currentDay-1)%2==0 ?'bg-50' :'bg-50'}`}>{currentDay-1 <=7 && daysArray[sampleDate.getDay()]}</span>
                                 <div className="p-1">
                                     <div className="flex justify-start pt-0 pl-0">{currentDay-1}</div>
@@ -123,12 +158,32 @@ const Calendar:FunctionComponent = () => {
         })
         
     )});
+    useEffect(()=>{
+        document.addEventListener('click', (e:any) => {
 
-    console.table(days);
+            const x = e.path[0].offsetLeft;
+            const y = e.path[0].offsetTop
+            setModalPosition({x,y })
+            // setModalPosition({x:e.path[0].offsetLeft, y:e.path[0].offsetTop})
+        })
+        const getAmountOfDaysInMonth = (year:number,month:number,day = 0) =>{
+            setAmountDays(new Date(year,month,day).getDate());
+            return new Date(year,month,day).getDate();
+        }
+    
+        getAmountOfDaysInMonth(currentYear,currentMonth+1);
+    },[currentMonth, currentYear])
+    // console.table(days);
     // console.log(days.map((item)=>console.log(item.find((day)=>day === todayDate))))
    
     return(
         <div className="grid h-screen grid-cols-12">
+            {showCustomModal && 
+                <div className="absolute z-10 h-[600px] w-[300px] bg-slate-900" ref={modal}>
+                    asdadasd
+                    <button onClick={()=>setShowCustomModal(false)}>Close</button>
+                </div>
+            }
             <div className="col-start-1 col-span-9">
                 <div className="flex gap-2 pb-8 justify-left bg-zinc-100 h-16">
                     <button className="pt-1" onClick={()=>{
@@ -157,8 +212,8 @@ const Calendar:FunctionComponent = () => {
             </div>
             <div className="col-start-10 col-span-3 border-l border-zinc-200">
                 <div className="bg-zinc-100 h-16 pl-2 border-b">
-                    <span className="text-lg pt-2">
-                        Here will be selected date
+                    <span className="text-base pt-2 font-bold">
+                        {selectedDate}
                     </span>
                 </div>
                 <div>
