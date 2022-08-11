@@ -1,6 +1,8 @@
 import { NextPage } from "next"
 import { useRouter } from "next/router";
 import { BaseSyntheticEvent, useRef, useState } from "react";
+import AddDevice from "../components/Form/AddDevice";
+import DeviceDisplay from "../components/Form/DevicesDisplay";
 
 interface IForm {
     name:string,
@@ -36,6 +38,7 @@ const FormDetails = () => {
         {date:'19.07.2022', hour:'11:00'},
         {date:'19.07.2022', hour:'13:00'},
     ]
+    const [devicesAmount, setDevicesAmount ] = useState<number>(0);
     const handleForm = (e:BaseSyntheticEvent) => {
 
        const customer:IForm = {
@@ -100,22 +103,19 @@ const FormDetails = () => {
       <>
         <form onSubmit={registerDetails} onChange={handleForm}>
             <div className="flex flex-col lg:w-1/2 md:w-full">
-                    <div className="col-start-1 row-start-1">
-                            <div className="px-3 pt-2 mb-6 md:mb-0">
+                    <div className="col-start-1 row-start-1 px-5">
+                            <div>
                                 <label className="font-semibold text-sm" htmlFor="grid-first-name">
-                                    <div className="pb-1">
-                                        Nazwa firmy:
-                                    </div>
+                                    Nazwa firmy
                                 </label>
                                 <input className="text-sm form-control relative flex-auto min-w-0 block w-full px-3 py-1.5 font-normal text-zico-700 bg-zinc-200 bg-clip-padding border border-solid border-zico-300 transition ease-in-out m-0 focus:text-zico-700 focus:bg-white focus:text-black focus:border-zico-600 focus:outline-none" id="grid-first-name" type="text" placeholder="Jane"/>
                             </div>
-                            <div className=" px-3 mb-6 md:mb-0">
+                            <div>
                                 <label className="font-semibold text-sm" htmlFor="grid-first-name">
-                                    NIP:
+                                    NIP
                                 </label>
                                 <input className="text-sm form-control relative flex-auto min-w-0 block w-full px-3 py-1.5 font-normal text-zico-700 bg-zinc-200 bg-clip-padding border border-solid border-zico-300 transition ease-in-out m-0 focus:text-zico-700 focus:bg-white focus:text-black focus:border-zico-600 focus:outline-none" id="grid-first-name" type="text" placeholder="Jane"/>
                             </div>
-                            <div className=" px-3 mb-6 md:mb-0">
                             <div>
                                 <label className="font-semibold text-sm" htmlFor="grid-first-name">
                                     Ulica:
@@ -146,7 +146,7 @@ const FormDetails = () => {
                                 </label>
                                 <input className="text-sm form-control relative flex-auto min-w-0 block w-full px-3 py-1.5 font-normal text-zico-700 bg-zinc-200 bg-clip-padding border border-solid border-zico-300 transition ease-in-out m-0 focus:text-zico-700 focus:bg-white focus:text-black focus:border-zico-600 focus:outline-none" id="grid-first-name" type="text" placeholder="Jane"/>
                             </div>
-                        </div>
+                        
                     </div>
                 <div className="col-start-2 row-start-1">
                     <div className="pt-2 pl-4">
@@ -164,79 +164,32 @@ const FormDetails = () => {
                         </div>
                 </div>
                 <div className="col-start-1 row-start-2 ">
-                    <div className="px-3 pt-2" >
-                        <label className="font-semibold text-sm" htmlFor="grid-first-name">
-                            <div className="pb-1">
-                                Dane urządzenia:
-                            </div>
-                                <label className="font-semibold text-sm" htmlFor="grid-first-name">
-                                    Marka urządzenia
-                                </label>
-                                <input className="text-sm form-control relative flex-auto min-w-0 block w-full px-3 py-1.5 font-normal text-zico-700 bg-zinc-200 bg-clip-padding border border-solid border-zico-300 transition ease-in-out m-0 focus:text-zico-700 focus:bg-white focus:text-black focus:border-zico-600 focus:outline-none" id="grid-first-name" type="text" placeholder="Jane"/>
-                                <label className="font-semibold text-sm" htmlFor="grid-first-name">
-                                    Typ
-                                </label>
-                                <select name="cars" id="cars" className="text-sm form-control relative flex-auto min-w-0 block w-full px-3 py-1.5 font-normal text-zico-700 bg-zinc-200 bg-clip-padding border border-solid border-zico-300 transition ease-in-out m-0 focus:text-zico-700 focus:bg-white focus:text-black focus:border-zico-600 focus:outline-none">
-                                    <option value="volvo">Ścienny</option>
-                                    <option value="saab">Kaseta</option>
-                                </select>
-                                <label className="font-semibold text-sm" htmlFor="grid-first-name">
-                                    Rodzaj serwisu
-                                </label>
-                                <select name="cars" id="cars" className="text-sm form-control relative flex-auto min-w-0 block w-full px-3 py-1.5 font-normal text-zico-700 bg-zinc-200 bg-clip-padding border border-solid border-zico-300 transition ease-in-out m-0 focus:text-zico-700 focus:bg-white focus:text-black focus:border-zico-600 focus:outline-none">
-                                    <option value="volvo">Awaria</option>
-                                    <option value="saab">Konserwacja</option>
-                                </select>
-                                <label className="font-semibold text-sm" htmlFor="grid-first-name">
-                                    Moc urządzenia
-                                </label>
-                                <input className="text-sm form-control relative flex-auto min-w-0 block w-full px-3 py-1.5 font-normal text-zico-700 bg-zinc-200 bg-clip-padding border border-solid border-zico-300 transition ease-in-out m-0 focus:text-zico-700 focus:bg-white focus:text-black focus:border-zico-600 focus:outline-none" id="grid-first-name" type="text" placeholder="Jane"/>
-                                <label className="font-semibold text-sm" htmlFor="grid-first-name">
-                                    Rodzaj czynnika chłodniczego
-                                </label>
-                                <input className="text-sm form-control relative flex-auto min-w-0 block w-full px-3 py-1.5 font-normal text-zico-700 bg-zinc-200 bg-clip-padding border border-solid border-zico-300 transition ease-in-out m-0 focus:text-zico-700 focus:bg-white focus:text-black focus:border-zico-600 focus:outline-none" id="grid-first-name" type="text" placeholder="Jane"/>
-                                <label className="font-semibold text-sm" htmlFor="grid-first-name">
-                                    Nr seryjny
-                                </label>
-                                <input className="text-sm form-control relative flex-auto min-w-0 block w-full px-3 py-1.5 font-normal text-zico-700 bg-zinc-200 bg-clip-padding border border-solid border-zico-300 transition ease-in-out m-0 focus:text-zico-700 focus:bg-white focus:text-black focus:border-zico-600 focus:outline-none" id="grid-first-name" type="text" placeholder="Jane"/>
-                        </label>
-                    </div>
-                    <div className="grid grid-cols-12">
-                        <div className="px-3 pt-2 mb-6 col-start-1 col-span-11 flex flex-col" ref={elementsToFix}>
-                            <label className="font-semibold text-sm" htmlFor="grid-first-name">
-                                <div className="pb-1">
-                                    Wypisz usterki:
-                                </div>
-                            </label>
-                            <input className="text-sm form-control relative flex-auto min-w-0 block w-full px-3 py-1.5 font-normal text-zico-700 bg-zinc-200 bg-clip-padding border border-solid border-zico-300 transition ease-in-out m-0 focus:text-zico-700 focus:bg-white focus:text-black focus:border-zico-600 focus:outline-none" id="grid-first-name" type="text" placeholder="Jane"/>
-                        </div>
-                        <div className="col-start-12 flex items-end pb-6">
-                            <button type="button" onClick={addElementToFixList}><svg className="h-8 w-8 text-black"  width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="12" cy="12" r="9" />  <line x1="9" y1="12" x2="15" y2="12" />  <line x1="12" y1="9" x2="12" y2="15" /></svg></button>
-                        </div>
-                    </div>
+                   <DeviceDisplay/>
+                   
                 </div>
                 <div className="col-start-2 row-start-2 pb-5">
-                    <div className="pl-5 font-semibold text-sm pt-3">Cennik usług</div>
+                    <div className="pl-4 font-semibold text-sm pt-3">Cennik usług</div>
                     <div className="grid grid-cols-12 pl-5 text-sm pt-5">
-                        <div className="col-start-1 col-span-6 flex flex-col">
+                        <div className="col-start-1 col-span-8 flex flex-col">
                             <span className="pb-5">Usługa</span>
-                            <span>Konserwacja split do 5kW</span>
-                            <span>Konserwacja split powyżej 5kW</span>
-                            <span>Godzina pracy serwisanta przy naprawie awarii</span>
-                            <span>Dojazd</span>
+                            <span>Konserwacja split do 5kW:</span>
+                            <span>Konserwacja split powyżej 5kW:</span>
+                            <span>Godzina pracy serwisanta - awaria:</span>
+                            <span>Dojazd:</span>
                         </div>
-                        <div className="col-start-7 col-span-2 flex flex-col">
+                        <div className="col-start-9 col-span-4 flex flex-col">
                             <span className="pb-5">Cena</span>
                             <span>180 zł netto</span>
                             <span>250 zł netto</span>
                             <span>100 zł netto</span>
                             <span>70 zł netto</span>
                         </div>
-                        <div className="col-start-9 col-span-3 flex flex-col">
-                            <span className="pb-5">Możliwe dodatkowe opłaty</span>
-                            <span>W zależnośc od stopnia zabrudzenia urządzenia do ceny może zzostać doliczony dodatek w wymiarze od 50 do 100% ceny</span>
-                        </div>
                     </div>
+                        <div className="flex flex-col text-sm pl-5 pt-5 pr-5">
+                            <ul>
+                                <li>W zależnośc od stopnia zabrudzenia urządzenia do ceny może zzostać doliczony dodatek w wymiarze od 50 do 100% ceny</li>
+                            </ul>
+                        </div>
                 </div>
             </div>
             <button className="btn ml-3 px-6 py-2.5 bg-black text-white font-medium text-xs leading-tight uppercase shadow-md hover:bg-zinc-900 hover:shadow-lg  focus:shadow-lg focus:outline-none focus:ring-0 active:bg-zinc-800 active:shadow-lg transition duration-150 ease-in-out flex items-center" type="submit">Wyślij formularz</button>

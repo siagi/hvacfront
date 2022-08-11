@@ -1,6 +1,7 @@
 import { NextPage } from "next"
 import { BaseSyntheticEvent, useRef, useState } from "react";
 import axios from 'axios'
+import Layout from "../components/Layout/Layout";
 
 
 const AddFile: NextPage = () => {
@@ -39,6 +40,7 @@ const AddFile: NextPage = () => {
     }
 
   return (
+    <Layout>
       <>
         <div className="App">
             <form onSubmit={uploadFile}>
@@ -48,6 +50,7 @@ const AddFile: NextPage = () => {
             </form>
         </div>
       </>
+    </Layout>
   )
 }
 

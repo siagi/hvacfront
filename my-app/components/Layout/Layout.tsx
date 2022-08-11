@@ -19,7 +19,7 @@ const Layout:FunctionComponent<{children:JSX.Element}> = ({children}) => {
         </Head>
         <div className='px-5 flex gap-3 row-start-1 h-14 justify-between bg-black text-white border-b-4 border-zinc-100 shadow-md pt-2 mb-1'>
             <div>
-                <Image src='/images/LogoMC23.svg' width='40' height='40' quality='100'/>
+                <Image src='/images/LogoMC23.svg' width='40' height='40' quality='100' alt='logoMc2'/>
             </div>
             <Search/>
             <Avatar/>
