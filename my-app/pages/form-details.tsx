@@ -1,6 +1,6 @@
 import { NextPage } from "next"
 import { useRouter } from "next/router";
-import { BaseSyntheticEvent, useRef, useState } from "react";
+import { BaseSyntheticEvent, useEffect, useRef, useState } from "react";
 import AddDevice from "../components/Form/AddDevice";
 import DeviceDisplay from "../components/Form/DevicesDisplay";
 
@@ -30,6 +30,8 @@ const FormDetails = () => {
     const [form,setForm] = useState<IForm | null>()
     const elementsToFix = useRef<HTMLDivElement>(null);
     const query = useRouter();
+    const {id} = query.query
+    console.log('C',id)
     const availableDate = [
         {date:'17.07.2022', hour:'13:00'},
         {date:'17.07.2022', hour:'15:00'},
@@ -78,22 +80,22 @@ const FormDetails = () => {
     const registerDetails = async (e:BaseSyntheticEvent) => {
         e.preventDefault();
         console.log(e)
-    //     const res = await fetch('http://localhost:5000/api/customer/add',
-    //     {
-    //         headers:{
-    //             'Content-Type': 'application/json',
-    //             'token':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZTQ4ZWYyNzY2OWQyODQ5OTJhMDAxMyIsImlzQWRtaW4iOnRydWUsImlhdCI6MTY0MzI5MzEzOCwiZXhwIjoxNjQ0MTU3MTM4fQ.vABjA3oj7apoZltcz7mBY2t_s5TVuYWQKMu0MR6rESc',
-    //         },
-    //         body:JSON.stringify({
-    //             ...form
-    //         }),
-    //         method:'POST'
-    //     }
-    //    )
-    //   if(res.ok){
-    //     setForm(null);
-    //     e.target.reset();
-    //   }
+        const res = await fetch('http://192.168.0.173:5000/api/updateorder/update',
+        {
+            headers:{
+                'Content-Type': 'application/json',
+                // 'token':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZTQ4ZWYyNzY2OWQyODQ5OTJhMDAxMyIsImlzQWRtaW4iOnRydWUsImlhdCI6MTY0MzI5MzEzOCwiZXhwIjoxNjQ0MTU3MTM4fQ.vABjA3oj7apoZltcz7mBY2t_s5TVuYWQKMu0MR6rESc',
+            },
+            body:JSON.stringify({
+                ...form,orderId:id
+            }),
+            method:'POST'
+        }
+       )
+      if(res.ok){
+        setForm(null);
+        e.target.reset();
+      }
 
 
 
@@ -131,12 +133,6 @@ const FormDetails = () => {
                             <div>
                                 <label className="font-semibold text-sm" htmlFor="grid-first-name">
                                     Miasto:
-                                </label>
-                                <input className="text-sm form-control relative flex-auto min-w-0 block w-full px-3 py-1.5 font-normal text-zico-700 bg-zinc-200 bg-clip-padding border border-solid border-zico-300 transition ease-in-out m-0 focus:text-zico-700 focus:bg-white focus:text-black focus:border-zico-600 focus:outline-none" id="grid-first-name" type="text" placeholder="Jane"/>
-                            </div>
-                            <div>
-                                <label className="font-semibold text-sm" htmlFor="grid-first-name">
-                                    Adres e-mail:
                                 </label>
                                 <input className="text-sm form-control relative flex-auto min-w-0 block w-full px-3 py-1.5 font-normal text-zico-700 bg-zinc-200 bg-clip-padding border border-solid border-zico-300 transition ease-in-out m-0 focus:text-zico-700 focus:bg-white focus:text-black focus:border-zico-600 focus:outline-none" id="grid-first-name" type="text" placeholder="Jane"/>
                             </div>
