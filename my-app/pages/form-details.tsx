@@ -1,17 +1,20 @@
 import { NextPage } from "next"
 import { useRouter } from "next/router";
 import { BaseSyntheticEvent, useEffect, useRef, useState } from "react";
-import AddDevice from "../components/Form/AddDevice";
+import AddDevice, { Device } from "../components/Form/AddDevice";
 import DeviceDisplay from "../components/Form/DevicesDisplay";
 
 interface IForm {
-    name:string,
-    nip:Number,
-    street:string,
-    postcode:string,
-    city:string,
-    email:string,
-    phone:Number
+    companyDetails:{
+        name:string,
+        nip:Number,
+        street:string,
+        postcode:string,
+        city:string,
+        phone:Number
+    },
+    device:Device[],
+    serviceDate:string,
 }
 
 // const elementStyle = {
@@ -31,29 +34,40 @@ const FormDetails = () => {
     const elementsToFix = useRef<HTMLDivElement>(null);
     const query = useRouter();
     const {id} = query.query
-    console.log('C',id)
     const availableDate = [
-        {date:'17.07.2022', hour:'13:00'},
-        {date:'17.07.2022', hour:'15:00'},
-        {date:'18.07.2022', hour:'08:00'},
-        {date:'18.07.2022', hour:'10:00'},
-        {date:'19.07.2022', hour:'11:00'},
-        {date:'19.07.2022', hour:'13:00'},
+        {id:1, date:'17.08.2022', hour:'08:00'},
+        {id:2,date:'17.08.2022', hour:'12:00'},
+        {id:3,date:'18.08.2022', hour:'08:00'},
+        {id:4,date:'18.08.2022', hour:'12:00'},
+        {id:5,date:'19.08.2022', hour:'08:00'},
+        {id:6,date:'19.08.2022', hour:'12:00'},
     ]
+    const [chosenDate, setChosenDate] = useState<{id:number, date:string, hour:string}>()
     const [devicesAmount, setDevicesAmount ] = useState<number>(0);
     const handleForm = (e:BaseSyntheticEvent) => {
+        console.log(e);
+        // const formDetails:IForm ={
+        //     companyDetails:{
+        //         name: e.target.form[0]?.value,
+        //         nip: e.target.form[1]?.value,
+        //         street: e.target.form[2]?.value,
+        //         postcode: e.target.form[3]?.value,
+        //         city: e.target.form[4]?.value,
+        //         phone: e.target.form[6]?.value
+        //     },
+        //     device:
+        // }
+    //    const companyDetails:IForm = {
+    //        name: e.target.form[0]?.value,
+    //        nip: e.target.form[1]?.value,
+    //        street: e.target.form[2]?.value,
+    //        postcode: e.target.form[3]?.value,
+    //        city: e.target.form[4]?.value,
+    //        email: e.target.form[5]?.value,
+    //        phone: e.target.form[6]?.value
+    //    }
 
-       const customer:IForm = {
-           name: e.target.form[0]?.value,
-           nip: e.target.form[1]?.value,
-           street: e.target.form[2]?.value,
-           postcode: e.target.form[3]?.value,
-           city: e.target.form[4]?.value,
-           email: e.target.form[5]?.value,
-           phone: e.target.form[6]?.value
-       }
-
-       setForm(customer);
+    //    setForm(customer);
     }
     const addElementToFixList = () => {
         console.log('asd')
@@ -79,8 +93,11 @@ const FormDetails = () => {
 
     const registerDetails = async (e:BaseSyntheticEvent) => {
         e.preventDefault();
-        console.log(e)
-        const res = await fetch('http://192.168.0.173:5000/api/updateorder/update',
+        console.log('REGISTER')
+        const b = [...e.target.elements].filter((a)=> a.id.includes('form'));
+        // console.log('B',b);
+        b.forEach((c)=>console.log(c.value));
+        const res = await fetch('http://192.168.212.126:5000/api/updateorder/update',
         {
             headers:{
                 'Content-Type': 'application/json',
@@ -107,40 +124,40 @@ const FormDetails = () => {
             <div className="flex flex-col lg:w-1/2 md:w-full">
                     <div className="col-start-1 row-start-1 px-5">
                             <div>
-                                <label className="font-semibold text-sm" htmlFor="grid-first-name">
+                                <label className="font-semibold text-sm" htmlFor="form-company-name">
                                     Nazwa firmy
                                 </label>
-                                <input className="text-sm form-control relative flex-auto min-w-0 block w-full px-3 py-1.5 font-normal text-zico-700 bg-zinc-200 bg-clip-padding border border-solid border-zico-300 transition ease-in-out m-0 focus:text-zico-700 focus:bg-white focus:text-black focus:border-zico-600 focus:outline-none" id="grid-first-name" type="text" placeholder="Jane"/>
+                                <input className="text-sm form-control relative flex-auto min-w-0 block w-full px-3 py-1.5 font-normal text-zico-700 bg-zinc-200 bg-clip-padding border border-solid border-zico-300 transition ease-in-out m-0 focus:text-zico-700 focus:bg-white focus:text-black focus:border-zico-600 focus:outline-none" id="form-company-name" type="text" placeholder="Wpisz nazwę firmy"/>
                             </div>
                             <div>
-                                <label className="font-semibold text-sm" htmlFor="grid-first-name">
+                                <label className="font-semibold text-sm" htmlFor="form-company-nip">
                                     NIP
                                 </label>
-                                <input className="text-sm form-control relative flex-auto min-w-0 block w-full px-3 py-1.5 font-normal text-zico-700 bg-zinc-200 bg-clip-padding border border-solid border-zico-300 transition ease-in-out m-0 focus:text-zico-700 focus:bg-white focus:text-black focus:border-zico-600 focus:outline-none" id="grid-first-name" type="text" placeholder="Jane"/>
+                                <input className="text-sm form-control relative flex-auto min-w-0 block w-full px-3 py-1.5 font-normal text-zico-700 bg-zinc-200 bg-clip-padding border border-solid border-zico-300 transition ease-in-out m-0 focus:text-zico-700 focus:bg-white focus:text-black focus:border-zico-600 focus:outline-none" id="form-company-nip" type="text" placeholder="Wpisz nip firmy"/>
                             </div>
                             <div>
-                                <label className="font-semibold text-sm" htmlFor="grid-first-name">
-                                    Ulica:
+                                <label className="font-semibold text-sm" htmlFor="form-company-address-street">
+                                    Ulica i nr:
                                 </label>
-                                <input className="text-sm form-control relative flex-auto min-w-0 block w-full px-3 py-1.5 font-normal text-zico-700 bg-zinc-200 bg-clip-padding border border-solid border-zico-300 transition ease-in-out m-0 focus:text-zico-700 focus:bg-white focus:text-black focus:border-zico-600 focus:outline-none" id="grid-first-name" type="text" placeholder="Jane"/>
+                                <input className="text-sm form-control relative flex-auto min-w-0 block w-full px-3 py-1.5 font-normal text-zico-700 bg-zinc-200 bg-clip-padding border border-solid border-zico-300 transition ease-in-out m-0 focus:text-zico-700 focus:bg-white focus:text-black focus:border-zico-600 focus:outline-none" id="form-company-address-street" type="text" placeholder="Wpisz ulicę"/>
                             </div>
                             <div>
-                                <label className="font-semibold text-sm" htmlFor="grid-first-name">
+                                <label className="font-semibold text-sm" htmlFor="form-company-address-postcode">
                                     Kod pocztowy:
                                 </label>
-                                <input className="text-sm form-control relative flex-auto min-w-0 block w-full px-3 py-1.5 font-normal text-zico-700 bg-zinc-200 bg-clip-padding border border-solid border-zico-300 transition ease-in-out m-0 focus:text-zico-700 focus:bg-white focus:text-black focus:border-zico-600 focus:outline-none" id="grid-first-name" type="text" placeholder="Jane"/>
+                                <input className="text-sm form-control relative flex-auto min-w-0 block w-full px-3 py-1.5 font-normal text-zico-700 bg-zinc-200 bg-clip-padding border border-solid border-zico-300 transition ease-in-out m-0 focus:text-zico-700 focus:bg-white focus:text-black focus:border-zico-600 focus:outline-none" id="form-company-address-postcode" type="text" placeholder="Wpisz kod pocztowy"/>
                             </div>
                             <div>
-                                <label className="font-semibold text-sm" htmlFor="grid-first-name">
+                                <label className="font-semibold text-sm" htmlFor="form-company-address-city">
                                     Miasto:
                                 </label>
-                                <input className="text-sm form-control relative flex-auto min-w-0 block w-full px-3 py-1.5 font-normal text-zico-700 bg-zinc-200 bg-clip-padding border border-solid border-zico-300 transition ease-in-out m-0 focus:text-zico-700 focus:bg-white focus:text-black focus:border-zico-600 focus:outline-none" id="grid-first-name" type="text" placeholder="Jane"/>
+                                <input className="text-sm form-control relative flex-auto min-w-0 block w-full px-3 py-1.5 font-normal text-zico-700 bg-zinc-200 bg-clip-padding border border-solid border-zico-300 transition ease-in-out m-0 focus:text-zico-700 focus:bg-white focus:text-black focus:border-zico-600 focus:outline-none" id="form-company-address-city" type="text" placeholder="Wpisz nazwę miasta"/>
                             </div>
                             <div>
-                                <label className="font-semibold text-sm" htmlFor="grid-first-name">
+                                <label className="font-semibold text-sm" htmlFor="form-company-phone">
                                     Numer telefonu:
                                 </label>
-                                <input className="text-sm form-control relative flex-auto min-w-0 block w-full px-3 py-1.5 font-normal text-zico-700 bg-zinc-200 bg-clip-padding border border-solid border-zico-300 transition ease-in-out m-0 focus:text-zico-700 focus:bg-white focus:text-black focus:border-zico-600 focus:outline-none" id="grid-first-name" type="text" placeholder="Jane"/>
+                                <input className="text-sm form-control relative flex-auto min-w-0 block w-full px-3 py-1.5 font-normal text-zico-700 bg-zinc-200 bg-clip-padding border border-solid border-zico-300 transition ease-in-out m-0 focus:text-zico-700 focus:bg-white focus:text-black focus:border-zico-600 focus:outline-none" id="form-company-phone" type="text" placeholder="Wpisz nr telefonu kontaktowego"/>
                             </div>
                         
                     </div>
@@ -150,7 +167,7 @@ const FormDetails = () => {
                         <div className="flex flex-wrap gap-2">
                             {availableDate && availableDate.map((item)=>{
                                 return(
-                                    <div key={item.date+item.hour} className='p-5 border hover:border-teal-500 cursor-pointer'>
+                                    <div onClick={() => setChosenDate(availableDate.find(i => i.id === item.id))} key={item.id} className={`p-5 border hover:border-teal-500 cursor-pointer ${item.id === chosenDate?.id ? 'bg-teal-300 border-teal-600':''}`}>
                                         {item.date} - {item.hour}
                                     </div>
                                 )
@@ -163,6 +180,9 @@ const FormDetails = () => {
                    <DeviceDisplay/>
                    
                 </div>
+            </div>
+            <button className="btn ml-3 px-6 py-2.5 bg-black text-white font-medium text-xs leading-tight uppercase shadow-md hover:bg-zinc-900 hover:shadow-lg  focus:shadow-lg focus:outline-none focus:ring-0 active:bg-zinc-800 active:shadow-lg transition duration-150 ease-in-out flex items-center" type="submit">Wyślij formularz</button>
+        </form>
                 <div className="col-start-2 row-start-2 pb-5">
                     <div className="pl-4 font-semibold text-sm pt-3">Cennik usług</div>
                     <div className="grid grid-cols-12 pl-5 text-sm pt-5">
@@ -187,9 +207,6 @@ const FormDetails = () => {
                             </ul>
                         </div>
                 </div>
-            </div>
-            <button className="btn ml-3 px-6 py-2.5 bg-black text-white font-medium text-xs leading-tight uppercase shadow-md hover:bg-zinc-900 hover:shadow-lg  focus:shadow-lg focus:outline-none focus:ring-0 active:bg-zinc-800 active:shadow-lg transition duration-150 ease-in-out flex items-center" type="submit">Wyślij formularz</button>
-        </form>
       </>
   )
 }
