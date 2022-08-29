@@ -4,6 +4,12 @@ import { BaseSyntheticEvent, useEffect, useRef, useState } from "react";
 import AddDevice, { Device } from "../components/Form/AddDevice";
 import DeviceDisplay from "../components/Form/DevicesDisplay";
 
+interface ServiceData {
+    id:number, 
+    date:string, 
+    hour:string
+}
+
 interface IForm {
     companyDetails:{
         name:string,
@@ -13,8 +19,8 @@ interface IForm {
         city:string,
         phone:Number
     },
-    device:Device[],
-    serviceDate:string,
+    devices:Device[],
+    serviceDate:ServiceData | undefined,
 }
 
 // const elementStyle = {
@@ -30,33 +36,96 @@ interface IForm {
 
 const FormDetails = () => {
 
-    const [form,setForm] = useState<IForm | null>()
+    const [form,setForm] = useState<IForm | null>(null)
     const elementsToFix = useRef<HTMLDivElement>(null);
     const query = useRouter();
+    console.log('query',query.query)
     const {id} = query.query
+    // console.log(id);
+    useEffect(()=>{
+        console.log(id);
+    },[id, query.query])
     const availableDate = [
-        {id:1, date:'17.08.2022', hour:'08:00'},
-        {id:2,date:'17.08.2022', hour:'12:00'},
-        {id:3,date:'18.08.2022', hour:'08:00'},
-        {id:4,date:'18.08.2022', hour:'12:00'},
-        {id:5,date:'19.08.2022', hour:'08:00'},
-        {id:6,date:'19.08.2022', hour:'12:00'},
+        {id:1, date:'2022-08-12', hour:'8'},
+        {id:2,date:'17/08/2022', hour:'12'},
+        {id:3,date:'18/08/2022', hour:'8'},
+        {id:4,date:'18/08/2022', hour:'12'},
+        {id:5,date:'19/08/2022', hour:'8'},
+        {id:6,date:'19/08/2022', hour:'12'},
     ]
-    const [chosenDate, setChosenDate] = useState<{id:number, date:string, hour:string}>()
-    const [devicesAmount, setDevicesAmount ] = useState<number>(0);
+    const [chosenDate, setChosenDate] = useState<ServiceData | undefined>()
+    const [topDevicesAmount, setTopDevicesAmount ] = useState<number>();
     const handleForm = (e:BaseSyntheticEvent) => {
-        console.log(e);
-        // const formDetails:IForm ={
-        //     companyDetails:{
-        //         name: e.target.form[0]?.value,
-        //         nip: e.target.form[1]?.value,
-        //         street: e.target.form[2]?.value,
-        //         postcode: e.target.form[3]?.value,
-        //         city: e.target.form[4]?.value,
-        //         phone: e.target.form[6]?.value
-        //     },
-        //     device:
-        // }
+        const formDetails:IForm ={
+            companyDetails: {
+                name: e.target.form[0]?.value,
+                nip: e.target.form[1]?.value,
+                street: e.target.form[2]?.value,
+                postcode: e.target.form[3]?.value,
+                city: e.target.form[4]?.value,
+                phone: e.target.form[5]?.value
+            },
+            devices:[
+                
+            ] ,
+            serviceDate: chosenDate
+        }
+        if(topDevicesAmount?.toString() && topDevicesAmount >= 0){
+            const devices:Device[] = []
+            for(let k = 0; k < topDevicesAmount+1; k++){
+                const test = [...e.target.form];
+                const device:Device = {
+                    brand: "",
+                    powerDevice: "",
+                    refrigerant: "",
+                    serialNumber: "",
+                    deviceFaults: []
+                };
+                test.forEach(i => {
+                    console.log('TOP DEVICE AMOUNT', k)
+                    console.log('for each')
+                    if(i.id.includes(`${k}`)){
+                        switch (true) {
+                         case i.id.includes(`form-device-${k}-brand`):
+                             device.brand = i.value
+                             break;
+                        case i.id.includes(`form-device-${k}-device-type`):
+                            device.deviceType = i.value
+                            break;
+                        case i.id.includes(`form-device-${k}-service-type`):
+                            device.serviceType = i.value
+                            break;
+                        case i.id.includes(`form-device-${k}-power`):
+                            device.powerDevice = i.value
+                            break;
+                        case i.id.includes(`form-device-${k}-refrigerant-type`):
+                            device.refrigerant = i.value
+                            break;
+                        case i.id.includes(`form-device-${k}-serial-nr`):
+                            device.serialNumber = i.value
+                            break;
+                        case i.id.includes('fault'):
+                            console.log('FAULT');
+                            console.log(i.value)
+                            device.deviceFaults.push(i.value)
+                            break;
+                        
+                         default:
+                             break;
+                        }
+                    }
+                    
+                })
+                devices.push(device);
+                console.log('DEVICEs',devices)
+                console.log('READY DEVICE',form)
+                
+                // console.log('TEST',test);
+                console.log(' end for each')
+            }
+            formDetails.devices = devices;
+        }
+
     //    const companyDetails:IForm = {
     //        name: e.target.form[0]?.value,
     //        nip: e.target.form[1]?.value,
@@ -67,7 +136,7 @@ const FormDetails = () => {
     //        phone: e.target.form[6]?.value
     //    }
 
-    //    setForm(customer);
+       setForm(formDetails);
     }
     const addElementToFixList = () => {
         console.log('asd')
@@ -94,10 +163,11 @@ const FormDetails = () => {
     const registerDetails = async (e:BaseSyntheticEvent) => {
         e.preventDefault();
         console.log('REGISTER')
+        console.log('chosenDate',chosenDate)
         const b = [...e.target.elements].filter((a)=> a.id.includes('form'));
         // console.log('B',b);
         b.forEach((c)=>console.log(c.value));
-        const res = await fetch('http://192.168.212.126:5000/api/updateorder/update',
+        const res = await fetch('http://192.168.0.173:5000/api/updateorder/update',
         {
             headers:{
                 'Content-Type': 'application/json',
@@ -167,7 +237,11 @@ const FormDetails = () => {
                         <div className="flex flex-wrap gap-2">
                             {availableDate && availableDate.map((item)=>{
                                 return(
-                                    <div onClick={() => setChosenDate(availableDate.find(i => i.id === item.id))} key={item.id} className={`p-5 border hover:border-teal-500 cursor-pointer ${item.id === chosenDate?.id ? 'bg-teal-300 border-teal-600':''}`}>
+                                    <div onClick={() => {
+                                        setChosenDate(availableDate.find(i => i.id === item.id))
+                                        if(form)
+                                        setForm({...form, serviceDate:chosenDate})
+                                        }} key={item.id} className={`p-5 border hover:border-teal-500 cursor-pointer ${item.id === chosenDate?.id ? 'bg-teal-300 border-teal-600':''}`}>
                                         {item.date} - {item.hour}
                                     </div>
                                 )
@@ -177,7 +251,7 @@ const FormDetails = () => {
                         </div>
                 </div>
                 <div className="col-start-1 row-start-2 ">
-                   <DeviceDisplay/>
+                   <DeviceDisplay setTopDevicesAmount={setTopDevicesAmount} />
                    
                 </div>
             </div>

@@ -1,11 +1,13 @@
 import { useState } from "react"
 import AddDevice from "./AddDevice";
 
-const DeviceDisplay = () => {
+const DeviceDisplay = ({setTopDevicesAmount}:{setTopDevicesAmount:(arg:number)=>void}) => {
     
 const [deviceAmount, setDeviceAmount] = useState<number[]>([]);
 const addDevice = () => {
     setDeviceAmount([...deviceAmount, Date.now()])
+    setTopDevicesAmount(deviceAmount.length);
+    console.log('AMOUNT',deviceAmount.length)
 }
 return(
 <div className="grid grid-cols-12">

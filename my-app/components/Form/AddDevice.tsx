@@ -67,7 +67,7 @@ const AddDevice = ( {id, setList, list, position}:{list:any[],id:string, setList
             <label className="font-semibold text-sm" htmlFor={`form-device-${position}-type`}>
                 Typ
             </label>
-            <select value={deviceState.deviceType} name="cars" id={`form-device-${position}-type`} onChange={(e)=>setDeviceState({...deviceState, deviceType:e.target.value})} className="text-sm form-control relative flex-auto min-w-0 block w-full px-3 py-1.5 font-normal text-zico-700 bg-zinc-200 bg-clip-padding border border-solid border-zico-300 transition ease-in-out m-0 focus:text-zico-700 focus:bg-white focus:text-black focus:border-zico-600 focus:outline-none">
+            <select value={deviceState.deviceType} name="cars" id={`form-device-${position}-device-type`} onChange={(e)=>setDeviceState({...deviceState, deviceType:e.target.value})} className="text-sm form-control relative flex-auto min-w-0 block w-full px-3 py-1.5 font-normal text-zico-700 bg-zinc-200 bg-clip-padding border border-solid border-zico-300 transition ease-in-out m-0 focus:text-zico-700 focus:bg-white focus:text-black focus:border-zico-600 focus:outline-none">
                 <option value="">--Choose and option--</option>
                 <option value="scienny">Ścienny</option>
                 <option value="kaseta">Kaseta</option>
@@ -102,9 +102,9 @@ const AddDevice = ( {id, setList, list, position}:{list:any[],id:string, setList
                                     </div>
                                 </label>
                                 {deviceFault.length > 0 && deviceFault.map((fault,index)=>{
-                                    return <input key={index} disabled value={fault}/>
+                                    return <input key={index} id={`form-device-${position}-fault-` + Date.now().toString()} disabled value={fault}/>
                                 })}
-                                <input ref={inputFault} id={`form-device-${position}-fault-` + Date.now().toString()} className="text-sm form-control relative flex-auto min-w-0 block w-full px-3 py-1.5 font-normal text-zico-700 bg-zinc-200 bg-clip-padding border border-solid border-zico-300 transition ease-in-out m-0 focus:text-zico-700 focus:bg-white focus:text-black focus:border-zico-600 focus:outline-none" type="text" placeholder="Wpisz usterkę"/>
+                                <input ref={inputFault} className="text-sm form-control relative flex-auto min-w-0 block w-full px-3 py-1.5 font-normal text-zico-700 bg-zinc-200 bg-clip-padding border border-solid border-zico-300 transition ease-in-out m-0 focus:text-zico-700 focus:bg-white focus:text-black focus:border-zico-600 focus:outline-none" type="text" placeholder="Wpisz usterkę"/>
                             </div>
                             <div className="col-start-12 flex items-end pb-6">
                                 <button type="button" onClick={()=>{
