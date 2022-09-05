@@ -6,8 +6,7 @@ import DeviceDisplay from "../components/Form/DevicesDisplay";
 
 interface ServiceData {
     id:number, 
-    date:string, 
-    hour:string
+    date:Date,
 }
 
 interface IForm {
@@ -45,25 +44,151 @@ const FormDetails = () => {
     useEffect(()=>{
         console.log(id);
     },[id, query.query])
-    const availableDate = [
-        {id:1, date:'2022-08-12', hour:'8'},
-        {id:2,date:'17/08/2022', hour:'12'},
-        {id:3,date:'18/08/2022', hour:'8'},
-        {id:4,date:'18/08/2022', hour:'12'},
-        {id:5,date:'19/08/2022', hour:'8'},
-        {id:6,date:'19/08/2022', hour:'12'},
+
+    const queryDates = [
+        "Tue Aug 30 2022 08:00:00 GMT 0000 (Coordinated Universal Time)",
+        "Tue Aug 30 2022 12:00:00 GMT 0000 (Coordinated Universal Time)",
+        "Wed Aug 31 2022 08:00:00 GMT 0000 (Coordinated Universal Time)",
+        "Wed Aug 31 2022 12:00:00 GMT 0000 (Coordinated Universal Time)",
+        "Thu Sep 01 2022 08:00:00 GMT 0000 (Coordinated Universal Time)",
+        "Thu Sep 01 2022 12:00:00 GMT 0000 (Coordinated Universal Time)",
+        "Fri Sep 02 2022 08:00:00 GMT 0000 (Coordinated Universal Time)",
+        "Fri Sep 02 2022 12:00:00 GMT 0000 (Coordinated Universal Time)",
+        "Mon Sep 05 2022 08:00:00 GMT 0000 (Coordinated Universal Time)",
+        "Mon Sep 05 2022 12:00:00 GMT 0000 (Coordinated Universal Time)",
+        "Tue Sep 06 2022 08:00:00 GMT 0000 (Coordinated Universal Time)",
+        "Tue Sep 06 2022 12:00:00 GMT 0000 (Coordinated Universal Time)"
     ]
+    
+    const availableDate  = queryDates.map((item, index)=>{
+        return {id:index, date:new Date(item)}
+    })
     const [chosenDate, setChosenDate] = useState<ServiceData | undefined>()
     const [topDevicesAmount, setTopDevicesAmount ] = useState<number>();
     const handleForm = (e:BaseSyntheticEvent) => {
+    //     const formDetails:IForm ={
+    //         companyDetails: {
+    //             name: e.target.form[0]?.value,
+    //             nip: e.target.form[1]?.value,
+    //             street: e.target.form[2]?.value,
+    //             postcode: e.target.form[3]?.value,
+    //             city: e.target.form[4]?.value,
+    //             phone: e.target.form[5]?.value
+    //         },
+    //         devices:[
+                
+    //         ] ,
+    //         serviceDate: chosenDate
+    //     }
+    //     if(topDevicesAmount?.toString() && topDevicesAmount >= 0){
+    //         const devices:Device[] = []
+    //         for(let k = 0; k < topDevicesAmount+1; k++){
+    //             const test = [...e.target.form];
+    //             const device:Device = {
+    //                 brand: "",
+    //                 powerDevice: "",
+    //                 refrigerant: "",
+    //                 serialNumber: "",
+    //                 deviceFaults: []
+    //             };
+    //             test.forEach(i => {
+    //                 console.log('TOP DEVICE AMOUNT', k)
+    //                 console.log('for each')
+    //                 console.log('III',i);
+    //                 if(i.id.includes(`${k}`)){
+    //                     switch (true) {
+    //                      case i.id.includes(`form-device-${k}-brand`):
+    //                          device.brand = i.value
+    //                          break;
+    //                     case i.id.includes(`form-device-${k}-device-type`):
+    //                         device.deviceType = i.value
+    //                         break;
+    //                     case i.id.includes(`form-device-${k}-service-type`):
+    //                         device.serviceType = i.value
+    //                         break;
+    //                     case i.id.includes(`form-device-${k}-power`):
+    //                         device.powerDevice = i.value
+    //                         break;
+    //                     case i.id.includes(`form-device-${k}-refrigerant-type`):
+    //                         device.refrigerant = i.value
+    //                         break;
+    //                     case i.id.includes(`form-device-${k}-serial-nr`):
+    //                         device.serialNumber = i.value
+    //                         break;
+    //                     case i.id.includes(`form-device-${k}-fault`):
+    //                         console.log('FAULT');
+    //                         console.log(i.value)
+    //                         device.deviceFaults.push(i.value)
+    //                         break;
+                        
+    //                      default:
+    //                          break;
+    //                     }
+    //                 }
+                    
+    //             })
+    //             devices.push(device);
+    //             console.log('DEVICEs',devices)
+    //             console.log('READY DEVICE',form)
+                
+    //             // console.log('TEST',test);
+    //             console.log(' end for each')
+    //         }
+    //         formDetails.devices = devices;
+    //     }
+
+    // //    const companyDetails:IForm = {
+    // //        name: e.target.form[0]?.value,
+    // //        nip: e.target.form[1]?.value,
+    // //        street: e.target.form[2]?.value,
+    // //        postcode: e.target.form[3]?.value,
+    // //        city: e.target.form[4]?.value,
+    // //        email: e.target.form[5]?.value,
+    // //        phone: e.target.form[6]?.value
+    // //    }
+
+    //    setForm(formDetails);
+    }
+    const addElementToFixList = () => {
+        console.log('asd')
+        const element = document.createElement('input');
+        element.style.background = '#e4e4e7';
+        element.style.paddingLeft = '10px';
+        element.style.paddingRight = '3px';
+        element.style.paddingBottom = '5px';
+        element.style.paddingTop = '5px';
+        element.style.border = '1px solid #d4d4d8'
+        element.style.marginTop = '5px';
+        element.style.outline = 'none'
+        element.style.fontSize = '14px'
+        element.addEventListener('focus', (e:any)=>{
+            e.target.style.background = '#fff';
+        });
+        element.addEventListener('blur', (e:any)=>{
+            e.target.style.background = '#e4e4e7';
+        })
+        console.log(element)
+        elementsToFix.current?.appendChild(element);
+    }
+
+    const registerDetails = async (e:BaseSyntheticEvent) => {
+        e.preventDefault();
+        // console.log('REGISTER')
+        // console.log('chosenDate',chosenDate)
+        // console.log('FORM',form)
+        // console.log(e)
+        const b = [...e.target.elements].filter((a)=> a.id.includes('form'));
+        // console.log('B',b);
+        b.forEach((c)=>console.log(c.value));
+
         const formDetails:IForm ={
             companyDetails: {
-                name: e.target.form[0]?.value,
-                nip: e.target.form[1]?.value,
-                street: e.target.form[2]?.value,
-                postcode: e.target.form[3]?.value,
-                city: e.target.form[4]?.value,
-                phone: e.target.form[5]?.value
+                name: e.target[0]?.value,
+                nip: e.target[1]?.value,
+                street: e.target[2]?.value,
+                postcode: e.target[3]?.value,
+                city: e.target[4]?.value,
+                phone: e.target[5]?.value
             },
             devices:[
                 
@@ -73,7 +198,7 @@ const FormDetails = () => {
         if(topDevicesAmount?.toString() && topDevicesAmount >= 0){
             const devices:Device[] = []
             for(let k = 0; k < topDevicesAmount+1; k++){
-                const test = [...e.target.form];
+                const test = [...e.target];
                 const device:Device = {
                     brand: "",
                     powerDevice: "",
@@ -82,8 +207,6 @@ const FormDetails = () => {
                     deviceFaults: []
                 };
                 test.forEach(i => {
-                    console.log('TOP DEVICE AMOUNT', k)
-                    console.log('for each')
                     if(i.id.includes(`${k}`)){
                         switch (true) {
                          case i.id.includes(`form-device-${k}-brand`):
@@ -104,7 +227,7 @@ const FormDetails = () => {
                         case i.id.includes(`form-device-${k}-serial-nr`):
                             device.serialNumber = i.value
                             break;
-                        case i.id.includes('fault'):
+                        case i.id.includes(`form-device-${k}-fault`):
                             console.log('FAULT');
                             console.log(i.value)
                             device.deviceFaults.push(i.value)
@@ -137,36 +260,7 @@ const FormDetails = () => {
     //    }
 
        setForm(formDetails);
-    }
-    const addElementToFixList = () => {
-        console.log('asd')
-        const element = document.createElement('input');
-        element.style.background = '#e4e4e7';
-        element.style.paddingLeft = '10px';
-        element.style.paddingRight = '3px';
-        element.style.paddingBottom = '5px';
-        element.style.paddingTop = '5px';
-        element.style.border = '1px solid #d4d4d8'
-        element.style.marginTop = '5px';
-        element.style.outline = 'none'
-        element.style.fontSize = '14px'
-        element.addEventListener('focus', (e:any)=>{
-            e.target.style.background = '#fff';
-        });
-        element.addEventListener('blur', (e:any)=>{
-            e.target.style.background = '#e4e4e7';
-        })
-        console.log(element)
-        elementsToFix.current?.appendChild(element);
-    }
 
-    const registerDetails = async (e:BaseSyntheticEvent) => {
-        e.preventDefault();
-        console.log('REGISTER')
-        console.log('chosenDate',chosenDate)
-        const b = [...e.target.elements].filter((a)=> a.id.includes('form'));
-        // console.log('B',b);
-        b.forEach((c)=>console.log(c.value));
         const res = await fetch('http://192.168.0.173:5000/api/updateorder/update',
         {
             headers:{
@@ -190,7 +284,7 @@ const FormDetails = () => {
 
   return (
       <>
-        <form onSubmit={registerDetails} onChange={handleForm}>
+        <form onSubmit={registerDetails} >
             <div className="flex flex-col lg:w-1/2 md:w-full">
                     <div className="col-start-1 row-start-1 px-5">
                             <div>
@@ -241,8 +335,8 @@ const FormDetails = () => {
                                         setChosenDate(availableDate.find(i => i.id === item.id))
                                         if(form)
                                         setForm({...form, serviceDate:chosenDate})
-                                        }} key={item.id} className={`p-5 border hover:border-teal-500 cursor-pointer ${item.id === chosenDate?.id ? 'bg-teal-300 border-teal-600':''}`}>
-                                        {item.date} - {item.hour}
+                                        }} key={item.id} className={`p-5 w-40 md:w-72 text-sm border hover:border-teal-500 cursor-pointer ${item.id === chosenDate?.id ? 'bg-teal-300 border-teal-600':''}`}>
+                                        {item.date.toLocaleString("pl-PL",{timeStyle:'short',dateStyle:'full', timeZone:'UTC'})}
                                     </div>
                                 )
                                 
