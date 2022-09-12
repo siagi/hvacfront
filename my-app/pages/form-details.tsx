@@ -1,7 +1,7 @@
 import { NextPage } from "next"
 import { useRouter } from "next/router";
 import { BaseSyntheticEvent, useEffect, useRef, useState } from "react";
-import AddDevice, { Device } from "../components/Form/AddDevice";
+import { Device } from "../components/Form/AddDevice";
 import DeviceDisplay from "../components/Form/DevicesDisplay";
 
 interface ServiceData {
@@ -22,27 +22,18 @@ interface IForm {
     serviceDate:ServiceData | undefined,
 }
 
-// const elementStyle = {
-//     background : '#e4e4e7',
-//     paddingLeft : '3px',
-//     paddingRight : '3px',
-//     paddingBottom : '2px',
-//     paddingTop : '2px',
-//     border : '1px solid #d4d4d8',
-//     marginTop : '5px',
-//     outline : 'none',
-// }
-
 const FormDetails = () => {
 
-    const [form,setForm] = useState<IForm | null>(null)
-    const elementsToFix = useRef<HTMLDivElement>(null);
+    let form:IForm | null = null;
     const query = useRouter();
     console.log('query',query.query)
     const {id} = query.query
-    // console.log(id);
     useEffect(()=>{
         console.log(id);
+        console.log(query.query['days[]'])
+        if(query.query['days[]']){
+            console.log(query.query['days[]'][2])
+        }
     },[id, query.query])
 
     const queryDates = [
@@ -60,126 +51,34 @@ const FormDetails = () => {
         "Tue Sep 06 2022 12:00:00 GMT 0000 (Coordinated Universal Time)"
     ]
     
-    const availableDate  = queryDates.map((item, index)=>{
+    const availableDate  = (query.query['days[]'] && Array.isArray(query.query['days[]']) ? query.query['days[]'] : queryDates).map((item, index)=>{
         return {id:index, date:new Date(item)}
     })
     const [chosenDate, setChosenDate] = useState<ServiceData | undefined>()
     const [topDevicesAmount, setTopDevicesAmount ] = useState<number>();
-    const handleForm = (e:BaseSyntheticEvent) => {
-    //     const formDetails:IForm ={
-    //         companyDetails: {
-    //             name: e.target.form[0]?.value,
-    //             nip: e.target.form[1]?.value,
-    //             street: e.target.form[2]?.value,
-    //             postcode: e.target.form[3]?.value,
-    //             city: e.target.form[4]?.value,
-    //             phone: e.target.form[5]?.value
-    //         },
-    //         devices:[
-                
-    //         ] ,
-    //         serviceDate: chosenDate
-    //     }
-    //     if(topDevicesAmount?.toString() && topDevicesAmount >= 0){
-    //         const devices:Device[] = []
-    //         for(let k = 0; k < topDevicesAmount+1; k++){
-    //             const test = [...e.target.form];
-    //             const device:Device = {
-    //                 brand: "",
-    //                 powerDevice: "",
-    //                 refrigerant: "",
-    //                 serialNumber: "",
-    //                 deviceFaults: []
-    //             };
-    //             test.forEach(i => {
-    //                 console.log('TOP DEVICE AMOUNT', k)
-    //                 console.log('for each')
-    //                 console.log('III',i);
-    //                 if(i.id.includes(`${k}`)){
-    //                     switch (true) {
-    //                      case i.id.includes(`form-device-${k}-brand`):
-    //                          device.brand = i.value
-    //                          break;
-    //                     case i.id.includes(`form-device-${k}-device-type`):
-    //                         device.deviceType = i.value
-    //                         break;
-    //                     case i.id.includes(`form-device-${k}-service-type`):
-    //                         device.serviceType = i.value
-    //                         break;
-    //                     case i.id.includes(`form-device-${k}-power`):
-    //                         device.powerDevice = i.value
-    //                         break;
-    //                     case i.id.includes(`form-device-${k}-refrigerant-type`):
-    //                         device.refrigerant = i.value
-    //                         break;
-    //                     case i.id.includes(`form-device-${k}-serial-nr`):
-    //                         device.serialNumber = i.value
-    //                         break;
-    //                     case i.id.includes(`form-device-${k}-fault`):
-    //                         console.log('FAULT');
-    //                         console.log(i.value)
-    //                         device.deviceFaults.push(i.value)
-    //                         break;
-                        
-    //                      default:
-    //                          break;
-    //                     }
-    //                 }
-                    
-    //             })
-    //             devices.push(device);
-    //             console.log('DEVICEs',devices)
-    //             console.log('READY DEVICE',form)
-                
-    //             // console.log('TEST',test);
-    //             console.log(' end for each')
-    //         }
-    //         formDetails.devices = devices;
-    //     }
 
-    // //    const companyDetails:IForm = {
-    // //        name: e.target.form[0]?.value,
-    // //        nip: e.target.form[1]?.value,
-    // //        street: e.target.form[2]?.value,
-    // //        postcode: e.target.form[3]?.value,
-    // //        city: e.target.form[4]?.value,
-    // //        email: e.target.form[5]?.value,
-    // //        phone: e.target.form[6]?.value
-    // //    }
-
-    //    setForm(formDetails);
-    }
-    const addElementToFixList = () => {
-        console.log('asd')
-        const element = document.createElement('input');
-        element.style.background = '#e4e4e7';
-        element.style.paddingLeft = '10px';
-        element.style.paddingRight = '3px';
-        element.style.paddingBottom = '5px';
-        element.style.paddingTop = '5px';
-        element.style.border = '1px solid #d4d4d8'
-        element.style.marginTop = '5px';
-        element.style.outline = 'none'
-        element.style.fontSize = '14px'
-        element.addEventListener('focus', (e:any)=>{
-            e.target.style.background = '#fff';
-        });
-        element.addEventListener('blur', (e:any)=>{
-            e.target.style.background = '#e4e4e7';
-        })
-        console.log(element)
-        elementsToFix.current?.appendChild(element);
+    const sendForm = async({form, id, e}:{form:any, id:any, e:BaseSyntheticEvent}) => {
+        const res = await fetch('http://192.168.0.173:5000/api/updateorder/update',
+        {
+            headers:{
+                'Content-Type': 'application/json',
+                // 'token':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZTQ4ZWYyNzY2OWQyODQ5OTJhMDAxMyIsImlzQWRtaW4iOnRydWUsImlhdCI6MTY0MzI5MzEzOCwiZXhwIjoxNjQ0MTU3MTM4fQ.vABjA3oj7apoZltcz7mBY2t_s5TVuYWQKMu0MR6rESc',
+            },
+            body:JSON.stringify({
+                ...form,orderId:id
+            }),
+            method:'POST'
+        }
+       )
+      if(res.ok){
+        form = null
+        e.target.reset();
+      }
     }
 
-    const registerDetails = async (e:BaseSyntheticEvent) => {
-        e.preventDefault();
-        // console.log('REGISTER')
-        // console.log('chosenDate',chosenDate)
-        // console.log('FORM',form)
-        // console.log(e)
-        const b = [...e.target.elements].filter((a)=> a.id.includes('form'));
-        // console.log('B',b);
-        b.forEach((c)=>console.log(c.value));
+    const updateForm = (e:BaseSyntheticEvent) => {
+        // const b = [...e.target.elements].filter((a)=> a.id.includes('form'));
+        // b.forEach((c)=>console.log(c.value));
 
         const formDetails:IForm ={
             companyDetails: {
@@ -240,51 +139,24 @@ const FormDetails = () => {
                     
                 })
                 devices.push(device);
-                console.log('DEVICEs',devices)
-                console.log('READY DEVICE',form)
-                
-                // console.log('TEST',test);
-                console.log(' end for each')
             }
             formDetails.devices = devices;
         }
 
-    //    const companyDetails:IForm = {
-    //        name: e.target.form[0]?.value,
-    //        nip: e.target.form[1]?.value,
-    //        street: e.target.form[2]?.value,
-    //        postcode: e.target.form[3]?.value,
-    //        city: e.target.form[4]?.value,
-    //        email: e.target.form[5]?.value,
-    //        phone: e.target.form[6]?.value
-    //    }
+       form = formDetails
+    }
 
-       setForm(formDetails);
-
-        const res = await fetch('http://192.168.0.173:5000/api/updateorder/update',
-        {
-            headers:{
-                'Content-Type': 'application/json',
-                // 'token':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZTQ4ZWYyNzY2OWQyODQ5OTJhMDAxMyIsImlzQWRtaW4iOnRydWUsImlhdCI6MTY0MzI5MzEzOCwiZXhwIjoxNjQ0MTU3MTM4fQ.vABjA3oj7apoZltcz7mBY2t_s5TVuYWQKMu0MR6rESc',
-            },
-            body:JSON.stringify({
-                ...form,orderId:id
-            }),
-            method:'POST'
-        }
-       )
-      if(res.ok){
-        setForm(null);
-        e.target.reset();
-      }
-
+    const registerDetails = async (e:BaseSyntheticEvent) => {
+        e.preventDefault();
+        updateForm(e)
+        await sendForm({form:form, id:id,e:e})
 
 
     }
 
   return (
       <>
-        <form onSubmit={registerDetails} >
+        <form onSubmit={registerDetails}>
             <div className="flex flex-col lg:w-1/2 md:w-full">
                     <div className="col-start-1 row-start-1 px-5">
                             <div>
@@ -329,12 +201,16 @@ const FormDetails = () => {
                     <div className="pt-2 pl-4">
                         <div className="font-semibold text-sm pb-1">Wybierz dostępny termin</div>
                         <div className="flex flex-wrap gap-2">
+                            <div>
+                                {query.query.days}
+                            </div>
                             {availableDate && availableDate.map((item)=>{
                                 return(
                                     <div onClick={() => {
+                                        console.log('click')
                                         setChosenDate(availableDate.find(i => i.id === item.id))
                                         if(form)
-                                        setForm({...form, serviceDate:chosenDate})
+                                        form = {...form, serviceDate:chosenDate}
                                         }} key={item.id} className={`p-5 w-40 md:w-72 text-sm border hover:border-teal-500 cursor-pointer ${item.id === chosenDate?.id ? 'bg-teal-300 border-teal-600':''}`}>
                                         {item.date.toLocaleString("pl-PL",{timeStyle:'short',dateStyle:'full', timeZone:'UTC'})}
                                     </div>
